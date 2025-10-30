@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Painel Fun - Login Automático e Criar Teste",
+  "version": "1.1",
+  "description": "Faz login automático no painel.fun e permite criar teste manualmente via popup.",
+  "permissions": ["scripting", "tabs"],
+  "host_permissions": ["https://painel.fun/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://painel.fun/login*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Painel Fun"
+  }
+}
