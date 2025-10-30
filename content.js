@@ -48,7 +48,7 @@ function aguardarConfirmacaoDeLogin() {
       console.log("✅ Login confirmado!");
       setTimeout(() => {
         simularTeclaESC();
-        criarTesteRapido(); // 👉 Executa automaticamente o teste rápido
+        console.log("ℹ️ Para criar um teste rápido, utilize o botão 'Criar teste' na extensão.");
       }, 2000);
     }
   }, 1000);
@@ -97,60 +97,4 @@ window.addEventListener("load", () => {
   }, 500);
 });
 
-// === FUNÇÕES DE CRIAÇÃO DE TESTE ===
-
-// Cria o teste rápido automaticamente após o login
-async function criarTesteRapido() {
-  // 1. Verifica se o usuário está logado
-  const userSpan = document.querySelector('span.text-small.text-inherit');
-  if (!userSpan || userSpan.textContent.trim().toLowerCase() !== "calicecup") {
-    console.warn("⚠️ Usuário não está logado. Cancelando criação de teste.");
-    return;
-  }
-
-  console.log("✅ Usuário logado confirmado. Iniciando criação de teste...");
-
-  // 2. Redireciona para /dashboard se necessário
-  if (!window.location.href.includes("/dashboard")) {
-    console.log("➡️ Redirecionando para /dashboard...");
-    window.location.href = "https://painel.fun/dashboard";
-    await new Promise(r => setTimeout(r, 4000)); // espera carregar
-  }
-
-  // 3. Localiza o botão “Teste rápido”
-  const encontrarBotao = setInterval(() => {
-    const botaoTeste = document.querySelector('a[href="/users"].bg-amber-500 span.truncate');
-    if (botaoTeste && botaoTeste.textContent.includes("Teste rápido")) {
-      clearInterval(encontrarBotao);
-      console.log("⚡ Botão 'Teste rápido' encontrado. Clicando...");
-      botaoTeste.closest("a").click();
-
-      // 4. Aguarda o pop-up aparecer
-      aguardarPopupTeste();
-    }
-  }, 1000);
-}
-
-// Aguarda o pop-up e preenche o campo “Nome de usuário”
-function aguardarPopupTeste() {
-  console.log("🕐 Aguardando pop-up 'Adicionar novo usuário'...");
-
-  const tentar = setInterval(() => {
-    const popup = document.querySelector('section[data-open][aria-modal="true"]');
-    if (popup) {
-      clearInterval(tentar);
-      console.log("✅ Pop-up detectado!");
-
-      // 5. Preenche o campo name="username"
-      const inputUsername = popup.querySelector('input[name="username"]');
-      if (inputUsername) {
-        inputUsername.focus();
-        inputUsername.value = "Teste1";
-        inputUsername.dispatchEvent(new Event("input", { bubbles: true }));
-        console.log("✍️ Campo 'Nome de usuário' preenchido com 'Teste1'.");
-      } else {
-        console.warn("⚠️ Campo 'username' não encontrado dentro do pop-up.");
-      }
-    }
-  }, 1000);
-}
+// (As funções de criação de teste agora são executadas manualmente via popup da extensão.)

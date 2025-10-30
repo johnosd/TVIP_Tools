@@ -3,11 +3,26 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action === "criarTeste") {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tab = tabs[0];
+      if (!tab || !tab.id) {
+        sendResponse({ status: "erro", message: "Nenhuma aba ativa encontrada." });
+        return;
+      }
+      if (!tab.url || !tab.url.startsWith("https://painel.fun")) {
+        sendResponse({ status: "erro", message: "Abra o painel.fun antes de criar o teste." });
+        return;
+      }
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: criarTesteRapido
+      }, () => {
+        if (chrome.runtime.lastError) {
+          sendResponse({ status: "erro", message: chrome.runtime.lastError.message });
+          return;
+        }
+        sendResponse({ status: "ok" });
       });
     });
+    return true;
   }
 });
 
